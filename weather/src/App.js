@@ -65,13 +65,8 @@ export default function App() {
         <>
           <p>
             Current weather: <b>{weather}</b>
-            <img
-              src={broken_clouds}
-              alt="Broken clouds"
-              width="50"
-              height="50"
-            />
           </p>
+          <img src={broken_clouds} alt="Broken clouds" width="50" height="50" />
         </>
       );
     } else if (weather === "clear sky") {
@@ -79,8 +74,8 @@ export default function App() {
         <>
           <p>
             Current weather: <b>{weather}</b>
-            <img src={clear_sky} alt="Clear sky" width="30" height="30" />
           </p>
+          <img src={clear_sky} alt="Clear sky" width="50" height="50" />
         </>
       );
     } else if (weather === "few clouds") {
@@ -88,8 +83,8 @@ export default function App() {
         <>
           <p>
             Current weather: <b>{weather}</b>
-            <img src={few_clouds} alt="Few clouds" width="50" height="50" />
           </p>
+          <img src={few_clouds} alt="Few clouds" width="50" height="50" />
         </>
       );
     } else if (weather === "mist") {
@@ -97,8 +92,8 @@ export default function App() {
         <>
           <p>
             Current weather: <b>{weather}</b>
-            <img src={mist} alt="mist" width="50" height="50" />
           </p>
+          <img src={mist} alt="mist" width="50" height="50" />
         </>
       );
     } else if (weather === "rain") {
@@ -106,8 +101,8 @@ export default function App() {
         <>
           <p>
             Current weather: <b>{weather}</b>
-            <img src={rain} alt="rain" width="50" height="50" />
           </p>
+          <img src={rain} alt="rain" width="50" height="50" />
         </>
       );
     } else if (weather === "scattered clouds") {
@@ -115,13 +110,13 @@ export default function App() {
         <>
           <p>
             Current weather: <b>{weather}</b>
-            <img
-              src={scattered_clouds}
-              alt="scattered_clouds"
-              width="50"
-              height="50"
-            />
           </p>
+          <img
+            src={scattered_clouds}
+            alt="scattered_clouds"
+            width="50"
+            height="50"
+          />
         </>
       );
     } else if (weather === "shower rain") {
@@ -129,8 +124,8 @@ export default function App() {
         <>
           <p>
             Current weather: <b>{weather}</b>
-            <img src={shower_rain} alt="Shower rain" width="50" height="50" />
           </p>
+          <img src={shower_rain} alt="Shower rain" width="50" height="50" />
         </>
       );
     } else if (weather === "snow") {
@@ -138,8 +133,8 @@ export default function App() {
         <>
           <p>
             Current weather: <b>{weather}</b>
-            <img src={snow} alt="snow" width="50" height="50" />
           </p>
+          <img src={snow} alt="snow" width="50" height="50" />
         </>
       );
     } else if (weather === "thundertorm") {
@@ -147,8 +142,8 @@ export default function App() {
         <>
           <p>
             Current weather: <b>{weather}</b>
-            <img src={thundertorm} alt="thundertorm" width="50" height="50" />
           </p>
+          <img src={thundertorm} alt="thundertorm" width="50" height="50" />
         </>
       );
     } else {
@@ -158,46 +153,14 @@ export default function App() {
 
   return (
     <>
-      <h1>Know your weather</h1>
-      <select onChange={(e) => chooseCity(e)}>
-        <option hidden={city}>Choose your city</option>
-        {cities.map((misto) => (
-          <option key={misto.id} value={misto.name}>
-            {misto.name}
-          </option>
-        ))}
-      </select>
-      <button onClick={getWeather}>Show Weather</button>
-      <WeatherInfo
-        airTemp={airTemp}
-        today={today}
+      <div className="TopBar">
+        <h1>Know your weather</h1>
+      </div>
+      <CityChoise
+        chooseCity={chooseCity}
         city={city}
-        tempMin={tempMin}
-        tempMax={tempMax}
-        humidity={humidity}
-        pressure={pressure}
-        sunrise={sunrise}
-        sunset={sunset}
-        showWeather={showWeather}
-      ></WeatherInfo>
-    </>
-  );
-}
-
-function WeatherInfo({
-  airTemp,
-  today,
-  city,
-  tempMin,
-  tempMax,
-  humidity,
-  pressure,
-  sunrise,
-  sunset,
-  showWeather,
-}) {
-  return (
-    <>
+        getWeather={getWeather}
+      ></CityChoise>
       {airTemp === "Unknown" ? (
         <h2>
           Please choose your city and press "Show Weather" button to see
@@ -208,27 +171,62 @@ function WeatherInfo({
           Weather forecast for {today} in {city}
         </h2>
       )}
-      {}
-      {showWeather()}
+      <div className="WeatherInfo">
+        <PrimaryInfo
+          airTemp={airTemp}
+          humidity={humidity}
+          pressure={pressure}
+          showWeather={showWeather}
+        ></PrimaryInfo>
+        <SecondaryInfo
+          tempMin={tempMin}
+          tempMax={tempMax}
+          sunrise={sunrise}
+          sunset={sunset}
+        ></SecondaryInfo>
+      </div>
+      <Footer></Footer>
+    </>
+  );
+}
+
+function Footer() {
+  return (
+    <div className="Footer">
+      <span className="Copyrights">
+        This application was created with Open Weather Map ©
+      </span>
+    </div>
+  );
+}
+
+function CityChoise({ chooseCity, city, getWeather }) {
+  return (
+    <div className="City">
+      <select className="CityList" onChange={(e) => chooseCity(e)}>
+        <option hidden={city}>Choose your city</option>
+        {cities.map((misto) => (
+          <option className="Option" key={misto.id} value={misto.name}>
+            {misto.name}
+          </option>
+        ))}
+      </select>
+      <button className="CityButton" onClick={getWeather}>
+        Show Weather
+      </button>
+    </div>
+  );
+}
+
+function PrimaryInfo({ airTemp, showWeather, humidity, pressure }) {
+  return (
+    <div className="PrimaryInfo">
+      <div>{showWeather()}</div>
       {airTemp === "Unknown" ? (
-        ""
+        <h3>There will be shown primary weather info</h3>
       ) : (
         <p>
           Temperature: <b>{airTemp + "°C"}</b>
-        </p>
-      )}
-      {tempMin === "Unknown" ? (
-        ""
-      ) : (
-        <p>
-          Temperature minimum during the day: <b>{tempMin + "°C"}</b>
-        </p>
-      )}
-      {tempMax === "Unknown" ? (
-        ""
-      ) : (
-        <p>
-          Temperature maximum during the day: <b>{tempMax + "°C"}</b>
         </p>
       )}
       {humidity === "Unknown" ? (
@@ -245,6 +243,28 @@ function WeatherInfo({
           Pressure: <b>{pressure + " In."}</b>
         </p>
       )}
+    </div>
+  );
+}
+
+function SecondaryInfo({ tempMin, tempMax, sunrise, sunset }) {
+  return (
+    <div className="SecondaryInfo">
+      {tempMin === "Unknown" ? (
+        <h3>There will be shown secondary weather info</h3>
+      ) : (
+        <p>
+          Temperature minimum during the day: <b>{tempMin + "°C"}</b>
+        </p>
+      )}
+      {tempMax === "Unknown" ? (
+        ""
+      ) : (
+        <p>
+          Temperature maximum during the day: <b>{tempMax + "°C"}</b>
+        </p>
+      )}
+
       {sunrise === "Unknown" ? (
         ""
       ) : (
@@ -259,6 +279,6 @@ function WeatherInfo({
           Sunset time: <b>{sunset}</b>
         </p>
       )}
-    </>
+    </div>
   );
 }
