@@ -10,17 +10,16 @@ import rain from "./icons/rain.png";
 import scattered_clouds from "./icons/scattered_clouds.png";
 import shower_rain from "./icons/shower_rain.png";
 import snow from "./icons/snow.png";
-import thundertorm from "./icons/thunderstorm.png";
+import thunderstorm from "./icons/thunderstorm.png";
 
 export default function App() {
   const [city, setCity] = useState(null);
-  const API_KEY = "4c8da435efebfb2bcf3b7d861165f3c9";
   function chooseCity(e) {
     setCity(e.target.value);
   }
   const loadData = async () => {
     const cityData = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?q=${city},ua&appid=${API_KEY}&units=metric`
+      `https://api.openweathermap.org/data/2.5/weather?q=${city},ua&appid=${process.env.REACT_APP_API_KEY}&units=metric`
     );
     return cityData;
   };
@@ -31,6 +30,7 @@ export default function App() {
     month: "2-digit",
     day: "2-digit",
   });
+
   const [airTemp, setAirTemp] = useState("Unknown");
   const [humidity, setHumidity] = useState("Unknown");
   const [pressure, setPressure] = useState("Unknown");
@@ -58,97 +58,28 @@ export default function App() {
         console.log(error);
       });
   }
+  const weatherMap = {
+    "broken clouds": broken_clouds,
+    "clear sky": clear_sky,
+    "few clouds": few_clouds,
+    mist: mist,
+    "light rain": rain,
+    rain: rain,
+    "scattered clouds": scattered_clouds,
+    "shower rain": shower_rain,
+    snow: snow,
+    thunderstorm: thunderstorm,
+  };
 
   function showWeather() {
-    if (weather === "broken clouds") {
-      return (
-        <>
-          <p>
-            Current weather: <b>{weather}</b>
-          </p>
-          <img src={broken_clouds} alt="Broken clouds" width="50" height="50" />
-        </>
-      );
-    } else if (weather === "clear sky") {
-      return (
-        <>
-          <p>
-            Current weather: <b>{weather}</b>
-          </p>
-          <img src={clear_sky} alt="Clear sky" width="50" height="50" />
-        </>
-      );
-    } else if (weather === "few clouds") {
-      return (
-        <>
-          <p>
-            Current weather: <b>{weather}</b>
-          </p>
-          <img src={few_clouds} alt="Few clouds" width="50" height="50" />
-        </>
-      );
-    } else if (weather === "mist") {
-      return (
-        <>
-          <p>
-            Current weather: <b>{weather}</b>
-          </p>
-          <img src={mist} alt="mist" width="50" height="50" />
-        </>
-      );
-    } else if (weather === "rain") {
-      return (
-        <>
-          <p>
-            Current weather: <b>{weather}</b>
-          </p>
-          <img src={rain} alt="rain" width="50" height="50" />
-        </>
-      );
-    } else if (weather === "scattered clouds") {
-      return (
-        <>
-          <p>
-            Current weather: <b>{weather}</b>
-          </p>
-          <img
-            src={scattered_clouds}
-            alt="scattered_clouds"
-            width="50"
-            height="50"
-          />
-        </>
-      );
-    } else if (weather === "shower rain") {
-      return (
-        <>
-          <p>
-            Current weather: <b>{weather}</b>
-          </p>
-          <img src={shower_rain} alt="Shower rain" width="50" height="50" />
-        </>
-      );
-    } else if (weather === "snow") {
-      return (
-        <>
-          <p>
-            Current weather: <b>{weather}</b>
-          </p>
-          <img src={snow} alt="snow" width="50" height="50" />
-        </>
-      );
-    } else if (weather === "thundertorm") {
-      return (
-        <>
-          <p>
-            Current weather: <b>{weather}</b>
-          </p>
-          <img src={thundertorm} alt="thundertorm" width="50" height="50" />
-        </>
-      );
-    } else {
-      return null;
-    }
+    return (
+      <>
+        <p>
+          Current weather: <b>{weather}</b>
+        </p>
+        <img src={weatherMap[weather]} alt={weather} width="50" height="50" />
+      </>
+    );
   }
 
   return (
@@ -156,11 +87,7 @@ export default function App() {
       <div className="TopBar">
         <h1>Know your weather</h1>
       </div>
-      <CityChoise
-        chooseCity={chooseCity}
-        city={city}
-        getWeather={getWeather}
-      ></CityChoise>
+      <CityChoise chooseCity={chooseCity} city={city} getWeather={getWeather} />
       {airTemp === "Unknown" ? (
         <h2>
           Please choose your city and press "Show Weather" button to see
@@ -177,15 +104,15 @@ export default function App() {
           humidity={humidity}
           pressure={pressure}
           showWeather={showWeather}
-        ></PrimaryInfo>
+        />
         <SecondaryInfo
           tempMin={tempMin}
           tempMax={tempMax}
           sunrise={sunrise}
           sunset={sunset}
-        ></SecondaryInfo>
+        />
       </div>
-      <Footer></Footer>
+      <Footer />
     </>
   );
 }
@@ -221,13 +148,16 @@ function CityChoise({ chooseCity, city, getWeather }) {
 function PrimaryInfo({ airTemp, showWeather, humidity, pressure }) {
   return (
     <div className="PrimaryInfo">
-      <div>{showWeather()}</div>
       {airTemp === "Unknown" ? (
         <h3>There will be shown primary weather info</h3>
       ) : (
-        <p>
-          Temperature: <b>{airTemp + "°C"}</b>
-        </p>
+        <>
+          {" "}
+          <div>{showWeather()}</div>
+          <p>
+            Temperature: <b>{airTemp + "°C"}</b>
+          </p>
+        </>
       )}
       {humidity === "Unknown" ? (
         ""
